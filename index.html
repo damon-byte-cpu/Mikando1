@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mikando Chicken & Takeaway </title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              red: '#DC2626',
+              yellow: '#F59E0B',
+              dark: '#0B0F19',
+              darkCard: '#1E293B',
+              light: '#F8FAFC',
+            }
+          },
+          animation: {
+            'float': 'float 4s ease-in-out infinite',
+            'marquee': 'marquee 25s linear infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-12px)' },
+            },
+            marquee: {
+              '0%': { transform: 'translateX(0%)' },
+              '100%': { transform: 'translateX(-50%)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .glass { backdrop-filter: blur(12px); background-color: rgba(255, 255, 255, 0.85); }
+    .dark .glass { backdrop-filter: blur(12px); background-color: rgba(11, 15, 25, 0.85); }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #DC2626; border-radius: 10px; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-brand-light dark:bg-brand-dark text-slate-900 dark:text-slate-100 transition-colors duration-300">
+
+  <div id="toast-container" class="fixed top-24 right-6 z-50 flex flex-col gap-3 pointer-events-none"></div>
+
+  <nav class="sticky top-0 z-40 w-full border-b border-slate-200/80 dark:border-slate-800/80 glass transition-all duration-300 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex justify-between items-center">
+      <a href="#" class="flex items-center gap-3 group">
+        <img src="logo.png" alt="Chicken & Takeaway Logo" class="h-14 w-auto object-contain group-hover:scale-105 transition-transform duration-300 bg-white dark:bg-transparent rounded-xl p-1 shadow-sm dark:shadow-none border border-slate-100 dark:border-none">
+        <span class="text-xl font-extrabold text-red-600 tracking-tight">MIKANDO</span>
+      </a>
+
+      <div class="hidden lg:flex items-center gap-8 font-bold text-sm tracking-wide">
+        <a href="#menu-section" class="hover:text-brand-red transition">Menu</a>
+        <a href="#story-section" class="hover:text-brand-red transition">Our Story</a>
+        <a href="#gallery-section" class="hover:text-brand-red transition">Gallery</a>
+        <a href="#faq-section" class="hover:text-brand-red transition">FAQs</a>
+        <a href="#careers-section" class="hover:text-brand-red transition">Careers</a>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button onclick="openAdminPortal()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-brand-red transition shadow-sm" title="Admin Control Dashboard">
+          <i class="fa-solid fa-lock text-sm"></i>
+        </button>
+
+        <button onclick="toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-brand-yellow transition shadow-sm">
+          <i id="dark-icon" class="fa-solid fa-moon text-lg"></i>
+        </button>
+
+        <button onclick="toggleCart(true)" class="relative bg-brand-dark dark:bg-brand-red text-white font-bold px-5 h-11 rounded-xl transition shadow-lg hover:shadow-brand-red/20 hover:-translate-y-0.5 flex items-center gap-3">
+          <i class="fa-solid fa-basket-shopping text-brand-yellow dark:text-white"></i>
+          <span id="cart-count" class="bg-brand-yellow text-brand-dark text-xs font-black px-2 py-0.5 rounded-lg">0</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+  <div class="bg-brand-red dark:bg-brand-yellow text-white dark:text-brand-dark font-black py-2.5 uppercase tracking-widest text-xs overflow-hidden whitespace-nowrap z-30 relative select-none shadow-md">
+    <div class="animate-marquee inline-block">
+      ⚡️ Best Burgers in Masaka • 📍 Location: Mwani, Masaka • 📞 Hotline: 0704 147415 • 📦 Fast Takeaway Handoff • ⚡️ Best Burgers in Masaka • 📍 Location: Mwani, Masaka • 📞 Hotline: 0704 147415 •
+    </div>
+  </div>
+
+  <header class="relative pt-12 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <div class="space-y-6 text-center lg:text-left">
+      <div class="inline-flex items-center gap-2 bg-brand-yellow/10 dark:bg-brand-yellow/20 text-brand-yellow font-bold text-xs uppercase tracking-widest px-4 py-2 rounded-full border border-brand-yellow/30">
+        <i class="fa-solid fa-star"></i> Retro Vibe. Modern Freshness.
+      </div>
+      <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none text-slate-900 dark:text-white">
+        Smashed <br class="hidden sm:inline"/>
+        <span class="text-brand-red">Perfection.</span>
+      </h1>
+      <p class="text-slate-600 dark:text-slate-400 text-lg max-w-md mx-auto lg:mx-0 font-medium">
+        Premium crispy chicken and classic roadside-style meals, built locally with absolute structural integrity.
+      </p>
+      <div class="pt-4 flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
+        <a href="#menu-section" class="bg-brand-red hover:bg-red-700 text-white font-bold px-6 py-4 rounded-xl transition shadow-xl hover:shadow-brand-red/30 text-center tracking-wide">
+          Order Online Now
+        </a>
+        <a href="https://wa.me/256704147415" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-4 rounded-xl transition shadow-xl flex items-center justify-center gap-3">
+          <i class="fa-brands fa-whatsapp text-lg"></i> WhatsApp Order
+        </a>
+        <a href="tel:0704147415" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-4 rounded-xl transition shadow-xl flex items-center justify-center gap-3">
+          <i class="fa-solid fa-phone text-lg"></i> Call Hotline
+        </a>
+      </div>
+    </div>
+    
+    <div class="flex justify-center relative">
+      <div class="absolute w-72 h-72 lg:w-96 lg:h-96 bg-brand-red/20 dark:bg-brand-red/10 rounded-full blur-3xl pointer-events-none top-10"></div>
+      <div class="absolute w-60 h-60 bg-brand-yellow/20 dark:bg-brand-yellow/10 rounded-full blur-3xl pointer-events-none bottom-10"></div>
+      <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=700&q=80" 
+           alt="Mikando Hero Burger" 
+           class="animate-float rounded-3xl shadow-2xl border-4 border-white dark:border-slate-800 object-cover max-w-[85%] sm:max-w-[70%] lg:max-w-[90%] transform rotate-2">
+    </div>
+  </header>
+
+  <section id="menu-section" class="py-20 bg-slate-100 dark:bg-slate-900/40 border-y border-slate-200/50 dark:border-slate-800/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        <div>
+          <h2 class="text-3xl sm:text-4xl font-black uppercase tracking-tight">Browse Our <span class="text-brand-red">Menu</span></h2>
+          <p class="text-slate-500 dark:text-slate-400 mt-2 text-sm font-medium">Freshly sourced ingredients, prepped daily by hand.</p>
+        </div>
+        
+        <div class="relative w-full md:w-80">
+          <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <input type="text" id="menu-search" oninput="handleSearch(this.value)" placeholder="Search burgers, drinks, dishes..." class="w-full pl-11 pr-4 py-3 text-sm rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-red shadow-sm transition">
+        </div>
+      </div>
+
+      <div id="category-bar" class="flex items-center gap-2 overflow-x-auto pb-4 mb-8 no-scrollbar"></div>
+
+      <div id="skeleton-grid" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="h-96 bg-slate-200 dark:bg-slate-800 animate-pulse rounded-3xl"></div>
+        <div class="h-96 bg-slate-200 dark:bg-slate-800 animate-pulse rounded-3xl"></div>
+        <div class="h-96 bg-slate-200 dark:bg-slate-800 animate-pulse rounded-3xl"></div>
+      </div>
+
+      <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+    </div>
+  </section>
+
+  <section id="story-section" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=700&q=80" alt="Diner Kitchen" class="rounded-3xl shadow-xl object-cover h-96 w-full border border-slate-200 dark:border-slate-800">
+    <div class="space-y-6">
+      <h2 class="text-3xl font-black uppercase tracking-tight">Our <span class="text-brand-red">Story</span></h2>
+      <p class="text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+        Born in Mwani, Masaka, Mikando Chicken & Takeaway merges the high-velocity execution of classic  roadside slider shops with rich, premium local flavor profiles. We operate with a strict standard: never frozen, made to order, and served with relentless hospitality.
+      </p>
+      <div class="grid grid-cols-3 gap-4 border-t border-slate-200 dark:border-slate-800 pt-6">
+        <div><h4 class="text-2xl font-black text-brand-red">100%</h4><p class="text-xs text-slate-500 font-bold">Fresh Halal Chicken</p></div>
+        <div><h4 class="text-2xl font-black text-brand-yellow">Masaka</h4><p class="text-xs text-slate-500 font-bold">Proudly Local Roots</p></div>
+        <div><h4 class="text-2xl font-black text-slate-900 dark:text-white">5+</h4><p class="text-xs text-slate-500 font-bold">Signature Batches</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="gallery-section" class="py-20 bg-slate-900 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl font-black uppercase tracking-tight mb-12">Diner <span class="text-brand-yellow">Gallery</span></h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80" class="rounded-2xl h-48 w-full object-cover hover:scale-102 transition" alt="Gallery 1">
+        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=400&q=80" class="rounded-2xl h-48 w-full object-cover hover:scale-102 transition" alt="Gallery 2">
+        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=400&q=80" class="rounded-2xl h-48 w-full object-cover hover:scale-102 transition" alt="Gallery 3">
+        <img src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=400&q=80" class="rounded-2xl h-48 w-full object-cover hover:scale-102 transition" alt="Gallery 4">
+      </div>
+    </div>
+  </section>
+
+  <section id="faq-section" class="py-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl font-black uppercase tracking-tight text-center mb-12">Frequently Asked <span class="text-brand-red">Questions</span></h2>
+    <div class="space-y-4">
+      <div class="bg-white dark:bg-brand-darkCard p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm cursor-pointer" onclick="toggleFaq(this)">
+        <div class="flex justify-between items-center font-bold"><p>Where are you located exactly?</p><i class="fa-solid fa-chevron-down text-sm transition"></i></div>
+        <p class="hidden text-slate-500 text-sm mt-3 font-medium">We are located along the main pathway in Mwani, Masaka, engineered for ultra-fast takeaway collections and custom drop-offs.</p>
+      </div>
+      <div class="bg-white dark:bg-brand-darkCard p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm cursor-pointer" onclick="toggleFaq(this)">
+        <div class="flex justify-between items-center font-bold"><p>How long does a local handoff delivery take?</p><i class="fa-solid fa-chevron-down text-sm transition"></i></div>
+        <p class="hidden text-slate-500 text-sm mt-3 font-medium">Most items within Masaka are processed, tracked, packed, and dropped within 25–40 minutes maximum depending on volume.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="careers-section" class="py-20 bg-brand-yellow/10 border-t border-brand-yellow/20 max-w-7xl mx-auto my-12 rounded-3xl p-8 sm:p-12 text-center space-y-6">
+    <h2 class="text-3xl font-black uppercase tracking-tight">Join the <span class="text-brand-red">Mikando Team</span></h2>
+    <p class="text-slate-600 dark:text-slate-400 max-w-xl mx-auto font-medium text-sm sm:text-base">
+      Want to craft the crispiest chicken and highest-quality smashed stacks in Masaka? We offer excellent pay, comprehensive training, and dynamic career progression pathways.
+    </p>
+    <button onclick="triggerToast('Application system is opening soon! Reach us via phone to query present roles.', 'info')" class="bg-brand-dark dark:bg-slate-800 hover:scale-102 text-white font-bold px-8 py-3.5 rounded-xl text-sm tracking-wide transition shadow-md">
+      View Open Positions
+    </button>
+  </section>
+
+  <div id="cart-drawer" class="fixed inset-0 bg-slate-950/40 backdrop-blur-sm z-50 pointer-events-none opacity-0 transition-opacity duration-300 flex justify-end">
+    <div class="bg-white dark:bg-slate-900 h-full w-full max-w-md p-6 shadow-2xl flex flex-col justify-between transform translate-x-full transition-transform duration-300 pointer-events-auto overflow-y-auto">
+      <div>
+        <div class="flex justify-between items-center border-b dark:border-slate-800 pb-4 mb-4">
+          <h3 class="text-xl font-black uppercase tracking-tight"><i class="fa-solid fa-basket-shopping text-brand-red mr-2"></i>Your Basket</h3>
+          <button onclick="toggleCart(false)" class="text-slate-400 hover:text-slate-900 dark:hover:text-white transition text-lg"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div id="cart-items" class="space-y-4 max-h-[42vh] overflow-y-auto pr-1"></div>
+      </div>
+
+      <div class="border-t dark:border-slate-800 pt-4 bg-white dark:bg-slate-900 sticky bottom-0 space-y-4">
+        <div class="flex gap-2">
+          <input type="text" id="coupon-input" placeholder="Coupon Code (e.g., MIKANDO10)" class="flex-1 px-4 py-2 text-xs rounded-xl border dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-1 focus:ring-brand-red uppercase font-bold tracking-wider">
+          <button onclick="applyCoupon()" class="bg-slate-900 dark:bg-slate-800 hover:bg-black text-white px-4 py-2 text-xs font-bold rounded-xl transition">Apply</button>
+        </div>
+
+        <div class="space-y-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 border-b dark:border-slate-800 pb-3">
+          <div class="flex justify-between"><span>Subtotal:</span><span id="summary-subtotal" class="text-slate-900 dark:text-white">0 UGX</span></div>
+          <div class="flex justify-between text-emerald-600 hidden" id="summary-discount-row"><span>Discount (Coupon):</span><span id="summary-discount">-0 UGX</span></div>
+          <div class="flex justify-between"><span>Local Delivery (Masaka Area):</span><span id="summary-delivery" class="text-slate-900 dark:text-white">3,000 UGX</span></div>
+          <div class="flex justify-between"><span>Est. Government Tax (5%):</span><span id="summary-tax" class="text-slate-900 dark:text-white">0 UGX</span></div>
+        </div>
+
+        <div class="flex justify-between font-black text-xl text-slate-900 dark:text-white pb-2">
+          <span>Grand Total:</span>
+          <span id="cart-total" class="text-brand-red dark:text-brand-yellow">0 UGX</span>
+        </div>
+        
+        <form id="checkout-form" onsubmit="processCheckout(event)" class="space-y-3">
+          <input type="tel" id="checkout-phone" required placeholder="Mobile Phone Number (e.g., 0704147415)" class="w-full px-4 py-3 text-sm rounded-xl border dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-red">
+          <textarea id="checkout-address" required rows="2" placeholder="Specific Delivery Directions / Handoff Landmark in Masaka" class="w-full px-4 py-3 text-sm rounded-xl border dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-red"></textarea>
+          <button type="submit" class="w-full bg-brand-red hover:bg-red-700 text-white font-black py-4 rounded-xl uppercase tracking-wider text-sm transition shadow-lg shadow-brand-red/20">
+            Dispatch Order via WhatsApp
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div id="admin-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 pointer-events-none opacity-0 transition-all duration-300 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-[2rem] p-6 shadow-2xl flex flex-col max-h-[90vh] overflow-hidden transform scale-95 transition-transform duration-300">
+      
+      <div id="admin-auth-view" class="space-y-5 py-8 text-center max-w-xs mx-auto">
+        <div class="w-14 h-14 bg-brand-red/10 rounded-full flex items-center justify-center mx-auto text-brand-red text-xl">
+          <i class="fa-solid fa-shield-halved animate-pulse"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-black uppercase tracking-tight">Admin Gate</h3>
+          <p class="text-xs text-slate-400 font-bold mt-1">Provide credentials to modify the active market list.</p>
+        </div>
+        <input type="password" id="admin-pass-field" placeholder="Enter Control Password" class="w-full px-4 py-2.5 text-center text-sm rounded-xl border dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-red font-bold">
+        <div class="flex gap-2">
+          <button onclick="closeAdminPortal()" class="flex-1 px-4 py-2 text-xs font-bold rounded-xl border dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition">Cancel</button>
+          <button onclick="verifyAdminPassword()" class="flex-1 bg-brand-red text-white text-xs font-bold rounded-xl shadow-md hover:bg-red-700 transition">Unlock</button>
+        </div>
+      </div>
+
+      <div id="admin-panel-view" class="hidden flex flex-col h-full overflow-hidden">
+        <div class="flex justify-between items-center border-b dark:border-slate-800 pb-4 mb-4">
+          <h3 class="text-xl font-black uppercase tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+            <i class="fa-solid fa-gears text-brand-red text-base"></i> Inventory Console
+          </h3>
+          <button onclick="closeAdminPortal()" class="text-slate-400 hover:text-slate-900 dark:hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 overflow-y-auto pr-1 flex-1 pb-2">
+          <form id="add-product-form" onsubmit="createNewProduct(event)" class="space-y-3 bg-slate-50 dark:bg-slate-800/40 p-4 rounded-2xl border dark:border-slate-800 h-fit sticky top-0">
+            <h4 class="font-black text-xs uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5 mb-2">
+              <i class="fa-solid fa-plus-circle text-brand-red"></i> New Dish Entry
+            </h4>
+            <input type="text" id="new-prod-name" required placeholder="Dish/Burger Name" class="w-full px-3 py-2 text-sm rounded-xl border dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-red">
+            <textarea id="new-prod-desc" required placeholder="Recipe Description / Sides Included" rows="2" class="w-full px-3 py-2 text-sm rounded-xl border dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-red"></textarea>
+            <input type="number" id="new-prod-price" required placeholder="Price (UGX)" class="w-full px-3 py-2 text-sm rounded-xl border dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-red">
+            <select id="new-prod-cat" required class="w-full px-3 py-2 text-sm rounded-xl border dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-red">
+              <option value="Combos">Combos</option>
+              <option value="Drinks">Drinks</option>
+              <option value="Plain">Plain</option>
+              <option value="Dish">Dish</option>
+            </select>
+            
+            <div class="space-y-1">
+              <label class="block text-[11px] font-black uppercase tracking-wider text-slate-400">Upload Dish Photo</label>
+              <input type="file" id="new-prod-img-file" accept="image/*" onchange="handleLocalImageUpload(event)" required class="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-brand-red/10 file:text-brand-red hover:file:bg-brand-red/20 border dark:border-slate-700 bg-white dark:bg-slate-800 rounded-xl p-1 focus:outline-none">
+            </div>
+
+            <div id="img-preview-card" class="hidden relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 h-28 w-full bg-slate-100 dark:bg-slate-800">
+              <img id="img-preview-element" src="" class="w-full h-full object-cover">
+              <button type="button" onclick="clearUploadedImage()" class="absolute top-2 right-2 bg-slate-950/70 text-white hover:bg-brand-red w-6 h-6 rounded-full flex items-center justify-center text-xs transition">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+
+            <label class="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-400 cursor-pointer py-1">
+              <input type="checkbox" id="new-prod-bestseller" class="rounded border-slate-300 text-brand-red focus:ring-brand-red">
+              Mark as Best Seller Badge
+            </label>
+            <button type="submit" class="w-full bg-brand-red hover:bg-red-700 text-white font-black py-2.5 rounded-xl text-xs uppercase tracking-wider transition shadow-md">
+              Publish Dish Layout
+            </button>
+          </form>
+
+          <div class="space-y-3 bg-slate-50 dark:bg-slate-800/40 p-4 rounded-2xl border dark:border-slate-800 h-fit">
+            <h4 class="font-black text-xs uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+              <i class="fa-solid fa-rectangle-list"></i> Directory Track
+            </h4>
+            <div id="admin-directory-list" class="space-y-2 max-h-[42vh] overflow-y-auto pr-1"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-brand-dark text-slate-400 py-12 px-4 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left items-start">
+      <div class="space-y-4">
+        <img src="logo.png" alt="Mikando Footer Logo" class="h-16 w-auto object-contain mx-auto md:mx-0 bg-white rounded-xl p-1 shadow-sm">
+        <p class="text-xs max-w-xs leading-relaxed mx-auto md:mx-0">Premium-meals inspired roadside diner design optimized cleanly for elite local taste profiles.</p>
+        <div class="flex justify-center md:justify-start gap-4 text-lg text-white">
+          <a href="#" class="hover:text-brand-yellow transition"><i class="fa-brands fa-facebook"></i></a>
+          <a href="#" class="hover:text-brand-yellow transition"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://wa.me/256704147415" target="_blank" class="hover:text-emerald-500 transition"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+      </div>
+      <div class="space-y-2 text-sm font-medium pt-4 md:pt-0">
+        <h4 class="text-white font-bold uppercase text-xs tracking-wider mb-2">Operational Hours</h4>
+        <p>Monday - Sunday: 10:00 AM - Midnight</p>
+        <p class="text-brand-yellow"><i class="fa-solid fa-clock mr-1.5"></i> Open Now</p>
+      </div>
+      <div class="space-y-2 text-sm font-medium pt-4 md:pt-0">
+        <h4 class="text-white font-bold uppercase text-xs tracking-wider mb-2">Contact Context</h4>
+        <p><i class="fa-solid fa-location-dot mr-2 text-brand-red"></i> Mwani, Masaka</p>
+        <p><i class="fa-solid fa-phone mr-2 text-brand-red"></i> 0704 147415</p>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto border-t border-slate-800 mt-12 pt-6 text-center text-xs">
+      &copy; 2026 Mikando Chicken & Takeaway. All Architectural Rights Reserved.
+    </div>
+  </footer>
+
+  <script>
+    // System Seed Products Array
+    const defaultProducts = [
+      { id: '101', name: 'Mikando Mega Double Combo', description: 'Two signature smashed custom patties, melting real cheddar, secret takeaway standard sauce, crinkle-cut fries, and a chilled drink.', price: 35000, category: 'Combos', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80', bestSeller: true },
+      { id: '102', name: 'Passion Fruit Quencher', description: 'Natural cold pressed extraction brewed sweet, served over direct crushed ice layers.', price: 8000, category: 'Drinks', image: 'https://images.unsplash.com/photo-1497534446932-c925b458314e?auto=format&fit=crop&w=500&q=80', bestSeller: true },
+      { id: '103', name: 'Plain Smashed Burger', description: 'Single high-sear patty, clean toasted brioche bun layer, standard crisp pickle slices.', price: 15000, category: 'Plain', image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=500&q=80', bestSeller: false },
+      { id: '104', name: 'Crispy Tender Rice Dish', description: 'Three tender hand-breaded chicken breast cuts paired with classic spiced rice and homemade sauce dipping recipe.', price: 26000, category: 'Dish', image: 'https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=500&q=80', bestSeller: false }
+    ];
+
+    const categories = ['All', 'Combos', 'Drinks', 'Plain', 'Dish'];
+    let products = defaultProducts;
+    
+    // Globals for image upload state machine
+    let currentUploadedImageBase64 = '';
+    
+    try {
+      const stored = localStorage.getItem('mikando_products');
+      if (stored) {
+        products = JSON.parse(stored);
+      }
+    } catch (e) {
+      console.error("Local data reset due to format update", e);
+      products = defaultProducts;
+      localStorage.setItem('mikando_products', JSON.stringify(products));
+    }
+
+    let cart = [];
+    let activeCategory = 'All';
+    let searchQuery = '';
+    let discountPercent = 0;
+
+    function init() {
+      if (localStorage.getItem('dark-mode') === 'true') {
+        document.documentElement.classList.add('dark');
+        document.getElementById('dark-icon').className = 'fa-solid fa-sun text-lg';
+      }
+      renderCategoryTabs();
+      renderMenu();
+    }
+
+    function syncStorage() {
+      localStorage.setItem('mikando_products', JSON.stringify(products));
+    }
+
+    function toggleDarkMode() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('dark-mode', isDark);
+      document.getElementById('dark-icon').className = isDark ? 'fa-solid fa-sun text-lg' : 'fa-solid fa-moon text-lg';
+      triggerToast(isDark ? 'Dark mode enabled' : 'Light mode enabled', 'success');
+    }
+
+    function renderCategoryTabs() {
+      const bar = document.getElementById('category-bar');
+      bar.innerHTML = categories.map(cat => `
+        <button onclick="setCategory('${cat}')" class="whitespace-nowrap px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition ${activeCategory === cat ? 'bg-brand-red text-white shadow-md shadow-brand-red/25' : 'bg-white dark:bg-brand-darkCard text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700'}">
+          ${cat}
+        </button>
+      `).join('');
+    }
+
+    function setCategory(cat) {
+      activeCategory = cat;
+      renderCategoryTabs();
+      triggerSkeletonAndRender();
+    }
+
+    function handleSearch(val) {
+      searchQuery = val.trim().toLowerCase();
+      renderMenu();
+    }
+    function triggerSkeletonAndRender() {
+      const grid = document.getElementById('products-grid');
+      const skeleton = document.getElementById('skeleton-grid');
+      grid.classList.add('hidden');
+      skeleton.classList.remove('hidden');
+      
+      setTimeout(() => {
+        skeleton.classList.add('hidden');
+        grid.classList.remove('hidden');
+        renderMenu();
+      }, 400);
+    }
+
+    function renderMenu() {
+      const grid = document.getElementById('products-grid');
+      let filtered = products;
+
+      if (activeCategory !== 'All') {
+        filtered = filtered.filter(p => p.category === activeCategory);
+      }
+      if (searchQuery) {
+        filtered = filtered.filter(p => p.name.toLowerCase().includes(searchQuery) || p.description.toLowerCase().includes(searchQuery));
+      }
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400 font-bold text-sm">No delicious items found matching criteria.</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(p => `
+        <div class="group bg-white dark:bg-brand-darkCard rounded-[2rem] overflow-hidden border border-slate-200/60 dark:border-slate-800/80 shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+          <div class="relative h-56 bg-slate-100 dark:bg-slate-800 overflow-hidden">
+            <img src="${p.image}" alt="${p.name}" class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=500&q=80'">
+            ${p.bestSeller ? '<span class="absolute top-4 left-4 bg-brand-yellow text-brand-dark text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-lg shadow-md">Best Seller</span>' : ''}
+            <span class="absolute bottom-4 right-4 bg-slate-950/70 text-white backdrop-blur-md text-xs font-bold px-3 py-1 rounded-lg">${p.category}</span>
+          </div>
+          <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+            <div class="space-y-1">
+              <h3 class="text-lg font-bold text-slate-900 dark:text-white tracking-tight group-hover:text-brand-red transition-colors">${p.name}</h3>
+              <p class="text-slate-500 dark:text-slate-400 text-xs font-medium leading-relaxed line-clamp-2">${p.description}</p>
+            </div>
+            <div class="flex items-center justify-between pt-2">
+              <span class="text-xl font-black text-slate-900 dark:text-white">${parseInt(p.price || 0).toLocaleString()} <span class="text-xs text-slate-400 font-bold">UGX</span></span>
+              <button onclick="addToCart('${p.id}')" class="bg-brand-yellow hover:bg-amber-500 text-brand-dark font-black px-4 py-2.5 rounded-xl text-xs uppercase tracking-wide transition shadow-sm">
+                Add To Cart
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openAdminPortal() {
+      const modal = document.getElementById('admin-modal');
+      document.getElementById('admin-pass-field').value = '';
+      document.getElementById('admin-auth-view').classList.remove('hidden');
+      document.getElementById('admin-panel-view').classList.add('hidden');
+      
+      modal.classList.remove('pointer-events-none', 'opacity-0');
+      modal.firstElementChild.classList.remove('scale-95');
+    }
+
+    function closeAdminPortal() {
+      const modal = document.getElementById('admin-modal');
+      modal.classList.add('pointer-events-none', 'opacity-0');
+      modal.firstElementChild.classList.add('scale-95');
+      clearUploadedImage();
+    }
+
+    function verifyAdminPassword() {
+      const passField = document.getElementById('admin-pass-field');
+      if (passField.value === 'admin') {
+        document.getElementById('admin-auth-view').classList.add('hidden');
+        document.getElementById('admin-panel-view').classList.remove('hidden');
+        renderAdminDirectory();
+        triggerToast('Access Granted. Welcome Admin!', 'success');
+      } else {
+        triggerToast('Incorrect admin passcode matrix verification.', 'error');
+      }
+    }
+
+    function renderAdminDirectory() {
+      const container = document.getElementById('admin-directory-list');
+      if (!products || products.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-400 font-bold py-6 text-center">Empty Catalog Directory.</p>`;
+        return;
+      }
+
+      container.innerHTML = products.map(p => `
+        <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/80 rounded-xl border border-slate-100 dark:border-slate-700">
+          <div class="flex items-center gap-3 min-w-0">
+            <img src="${p.image}" class="w-10 h-10 object-cover rounded-lg border" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=100&q=80'">
+            <div class="min-w-0">
+              <h5 class="text-xs font-bold text-slate-900 dark:text-white truncate">${p.name}</h5>
+              <p class="text-[10px] text-slate-400 font-bold">${p.category} • ${parseInt(p.price || 0).toLocaleString()} UGX</p>
+            </div>
+          </div>
+          <button onclick="deleteProductListing('${p.id}')" class="text-xs text-brand-red p-2 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition" title="Delete listing entry">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    // Process image load from disk drive allocation matrix
+    function handleLocalImageUpload(event) {
+      const selectedFile = event.target.files[0];
+      if (!selectedFile) return;
+
+      // Restrict payload to block local storage overflow anomalies (1.5 Megabytes Max recommendation)
+      if (selectedFile.size > 1500000) {
+        triggerToast('Image file sizing is too large! Downsize below 1.5MB to secure storage memory.', 'error');
+        event.target.value = '';
+        return;
+      }
+
+      const readerInstance = new FileReader();
+      readerInstance.onload = function(e) {
+        currentUploadedImageBase64 = e.target.result;
+        
+        // Show layout visualization image preview
+        const displayBox = document.getElementById('img-preview-card');
+        const displayImg = document.getElementById('img-preview-element');
+        displayImg.src = currentUploadedImageBase64;
+        displayBox.classList.remove('hidden');
+      };
+      
+      readerInstance.readAsDataURL(selectedFile);
+    }
+
+    function clearUploadedImage() {
+      currentUploadedImageBase64 = '';
+      const inputEl = document.getElementById('new-prod-img-file');
+      if (inputEl) inputEl.value = '';
+      document.getElementById('img-preview-card').classList.add('hidden');
+      document.getElementById('img-preview-element').src = '';
+    }
+
+    function createNewProduct(e) {
+      e.preventDefault();
+      
+      if (!currentUploadedImageBase64) {
+        triggerToast('Please select or upload a valid local image asset preview first.', 'error');
+        return;
+      }
+
+      const newListing = {
+        id: 'prod_' + Date.now().toString(),
+        name: document.getElementById('new-prod-name').value.trim(),
+        description: document.getElementById('new-prod-desc').value.trim(),
+        price: parseInt(document.getElementById('new-prod-price').value || 0),
+        category: document.getElementById('new-prod-cat').value,
+        image: currentUploadedImageBase64,
+        bestSeller: document.getElementById('new-prod-bestseller').checked
+      };
+
+      products.push(newListing);
+      syncStorage();
+      
+      document.getElementById('add-product-form').reset();
+      clearUploadedImage();
+      renderAdminDirectory();
+      renderMenu();
+      triggerToast('Listing posted with image layout preview directly!', 'success');
+    }
+
+    function deleteProductListing(id) {
+      const confirmState = confirm("Are you sure you want to purge this recipe card from the active menu listing completely?");
+      if (!confirmState) return;
+      products = products.filter(p => p.id !== id);
+      cart = cart.filter(c => c.id !== id);
+      
+      syncStorage();
+      updateCartState();
+      renderAdminDirectory();
+      renderMenu();
+      triggerToast('Item entry deleted permanently.', 'error');
+    }
+
+    function toggleCart(open) {
+      const drawer = document.getElementById('cart-drawer');
+      const inner = drawer.firstElementChild;
+      if (open) {
+        drawer.classList.remove('pointer-events-none', 'opacity-0');
+        inner.classList.remove('translate-x-full');
+      } else {
+        drawer.classList.add('pointer-events-none', 'opacity-0');
+        inner.classList.add('translate-x-full');
+      }
+    }
+
+    function addToCart(id) {
+      const prod = products.find(p => p.id === id);
+      if (!prod) return;
+      const activeItem = cart.find(c => c.id === id);
+      if (activeItem) {
+        activeItem.quantity += 1;
+      } else {
+        cart.push({ ...prod, quantity: 1 });
+      }
+      updateCartState();
+      triggerToast(`${prod.name} added to basket!`, 'success');
+    }
+
+    function changeQuantity(id, delta) {
+      const targetItem = cart.find(c => c.id === id);
+      if (!targetItem) return;
+      targetItem.quantity += delta;
+      if (targetItem.quantity <= 0) {
+        cart = cart.filter(c => c.id !== id);
+      }
+      updateCartState();
+    }
+
+    function applyCoupon() {
+      const code = document.getElementById('coupon-input').value.trim().toUpperCase();
+      const row = document.getElementById('summary-discount-row');
+      if (code === 'MIKANDO10') {
+        discountPercent = 0.10;
+        row.classList.remove('hidden');
+        triggerToast('Promo applied: 10% Discount active!', 'success');
+      } else {
+        discountPercent = 0;
+        row.classList.add('hidden');
+        triggerToast('Invalid coupon configuration code.', 'error');
+      }
+      updateCartState();
+    }
+
+    function updateCartState() {
+      const totalCount = cart.reduce((acc, i) => acc + i.quantity, 0);
+      const subtotal = cart.reduce((acc, i) => acc + (i.price * i.quantity), 0);
+      
+      const discountVal = Math.round(subtotal * discountPercent);
+      const calculatedBase = subtotal - discountVal;
+      const taxVal = Math.round(calculatedBase * 0.05);
+      const deliveryFee = subtotal > 0 ? 3000 : 0;
+      const grandTotal = calculatedBase + taxVal + deliveryFee;
+
+      document.getElementById('cart-count').innerText = totalCount;
+      document.getElementById('summary-subtotal').innerText = `${subtotal.toLocaleString()} UGX`;
+      document.getElementById('summary-discount').innerText = `-${discountVal.toLocaleString()} UGX`;
+      document.getElementById('summary-tax').innerText = `${taxVal.toLocaleString()} UGX`;
+      document.getElementById('summary-delivery').innerText = `${deliveryFee.toLocaleString()} UGX`;
+      document.getElementById('cart-total').innerText = `${grandTotal.toLocaleString()} UGX`;
+
+      const list = document.getElementById('cart-items');
+      if (cart.length === 0) {
+        list.innerHTML = `
+          <div class="text-center py-16 space-y-3">
+            <i class="fa-solid fa-basket-shopping text-4xl text-slate-300"></i>
+            <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Your basket is clear.</p>
+          </div>`;
+        return;
+      }
+
+      list.innerHTML = cart.map(item => `
+        <div class="flex items-center gap-4 bg-slate-50 dark:bg-slate-800/60 p-3 rounded-2xl border border-slate-100 dark:border-slate-800">
+          <img src="${item.image}" class="w-14 h-14 rounded-xl object-cover border dark:border-slate-700" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=100&q=80'">
+          <div class="flex-1 min-w-0">
+            <h4 class="font-bold text-xs text-slate-900 dark:text-white truncate tracking-tight">${item.name}</h4>
+            <p class="text-[11px] text-slate-400 font-bold mt-0.5">${(item.price * item.quantity).toLocaleString()} UGX</p>
+            <div class="flex items-center justify-between mt-2">
+              <div class="flex items-center gap-2">
+                <button onclick="changeQuantity('${item.id}', -1)" class="w-6 h-6 bg-slate-200 dark:bg-slate-700 text-xs font-bold rounded-lg flex items-center justify-center hover:bg-slate-300 transition text-slate-700 dark:text-white">-</button>
+                <span class="text-xs font-black px-1">${item.quantity}</span>
+                <button onclick="changeQuantity('${item.id}', 1)" class="w-6 h-6 bg-slate-200 dark:bg-slate-700 text-xs font-bold rounded-lg flex items-center justify-center hover:bg-slate-300 transition text-slate-700 dark:text-white">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+    function processCheckout(e) {
+      e.preventDefault();
+      if (cart.length === 0) return triggerToast('Your basket is entirely clear.', 'error');
+
+      const phone = document.getElementById('checkout-phone').value.trim();
+      const address = document.getElementById('checkout-address').value.trim();
+      
+      const subtotal = cart.reduce((acc, i) => acc + (i.price * i.quantity), 0);
+      const discountVal = Math.round(subtotal * discountPercent);
+      const calculatedBase = subtotal - discountVal;
+      const taxVal = Math.round(calculatedBase * 0.05);
+      const deliveryFee = subtotal > 0 ? 3000 : 0;
+      const total = calculatedBase + taxVal + deliveryFee;
+
+      // Compile and structure custom food items string 
+      let cartItemsText = '';
+      cart.forEach(item => {
+        cartItemsText += `• ${item.quantity}x ${item.name} (${(item.price * item.quantity).toLocaleString()} UGX)\n`;
+      });
+
+      // Construct WhatsApp message with formatting
+      const structuredMessage = 
+        `🍔 *NEW ORDER FOR MIKANDO CHICKEN & TAKEAWAY*\n\n` +
+        `📱 *Customer Phone:* ${phone}\n` +
+        `📍 *Delivery Directions:* ${address}\n\n` +
+        `🛒 *Basket Content Details:*\n${cartItemsText}\n` +
+        `─────────────────────\n` +
+        `🔹 *Subtotal:* ${subtotal.toLocaleString()} UGX\n` +
+        (discountPercent > 0 ? `💚 *Promo Discount Applied:* -${discountVal.toLocaleString()} UGX\n` : '') +
+        `🔹 *Delivery Fee:* ${deliveryFee.toLocaleString()} UGX\n` +
+        `🔹 *Est. Government Tax (5%):* ${taxVal.toLocaleString()} UGX\n` +
+        `💰 *GRAND TOTAL DUE:* ${total.toLocaleString()} UGX\n\n` +
+        `📦 *Payment Mode:* Pay Cash / Mobile Money on Delivery Handoff. Please prepare layout setup immediately!`;
+
+      const encodedPayload = encodeURIComponent(structuredMessage);
+      const finalWhatsAppURL = `https://wa.me/256704147415?text=${encodedPayload}`;
+
+      triggerToast('Redirecting order manifest details to WhatsApp pipeline...', 'success');
+
+      // Clear layout values
+      cart = [];
+      discountPercent = 0;
+      document.getElementById('checkout-form').reset();
+      document.getElementById('coupon-input').value = '';
+      document.getElementById('summary-discount-row').classList.add('hidden');
+      updateCartState();
+      toggleCart(false);
+
+      // Trigger automatic WhatsApp redirection context flow
+      setTimeout(() => {
+        window.open(finalWhatsAppURL, '_blank');
+      }, 700);
+    }
+
+    function toggleFaq(el) {
+      const p = el.querySelector('p');
+      const icon = el.querySelector('i');
+      p.classList.toggle('hidden');
+      icon.classList.toggle('rotate-180');
+    }
+
+    function triggerToast(message, type) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      const bg = type === 'success' ? 'bg-emerald-600' : type === 'error' ? 'bg-brand-red' : 'bg-blue-600';
+      
+      toast.className = `${bg} text-white text-xs font-bold px-4 py-3 rounded-xl shadow-xl transition-all duration-300 transform translate-x-12 opacity-0 flex items-center gap-2 pointer-events-auto`;
+      toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-info'}"></i> <span>${message}</span>`;
+      
+      container.appendChild(toast);
+      setTimeout(() => toast.classList.remove('translate-x-12', 'opacity-0'), 50);
+      setTimeout(() => {
+        toast.classList.add('translate-x-12', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>
